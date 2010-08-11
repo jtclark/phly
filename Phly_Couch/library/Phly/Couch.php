@@ -409,10 +409,14 @@ class Phly_Couch
             }
             $method = 'PUT';
         }
-        $this->getHttpClient()->setRawData($document->toJson());
+        $this->getHttpClient()->setRawData($document->toJson(),'application/json');
         $response = $this->_prepareAndSend($path, $method);
         $status   = $response->getStatus();
         switch ($status) {
+            case 415:
+                require_once 'Phly/Couch/Exception.php';
+                throw new Phly_Couch_Exception('Content-Type must be application/json.');
+                break;
             case 412:
                 require_once 'Phly/Couch/Exception.php';
                 throw new Phly_Couch_Exception(sprintf('Document with the specified document id "%s" already exists', $id));
@@ -552,6 +556,7 @@ class Phly_Couch
      */
     protected function _prepareAndSend($path, $method, array $queryParams = null)
     {
+        
         $client = $this->getHttpClient();
         $this->_prepareUri($path, $queryParams);
         $response = $client->request($method);
