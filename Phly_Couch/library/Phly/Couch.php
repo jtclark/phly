@@ -513,7 +513,7 @@ class Phly_Couch
         }
         $db = $this->_verifyDb($db);
 
-        $response = $this->_prepareAndSend($db . '/design/_view/'.$name, 'GET', $options);
+        $response = $this->_prepareAndSend($db . '/_design/'.$name, 'GET', $options);
         if (!$response->isSuccessful()) {
             require_once 'Phly/Couch/Exception.php';
             throw new Phly_Couch_Exception(sprintf('Failed querying database "%s"; received response code "%s"', $db, (string) $response->getStatus()));
